@@ -1,0 +1,70 @@
+# TaskAPI — Sample HTTP Requests
+# You can run these with the REST Client extension in VS Code,
+# or use curl commands below each block.
+
+@base_url = http://localhost:8000
+@token = PASTE_YOUR_TOKEN_HERE
+
+### Health check
+GET {{base_url}}/
+
+### Register a new user
+# curl -X POST http://localhost:8000/users/register \
+#   -H "Content-Type: application/json" \
+#   -d '{"username":"alice","email":"alice@example.com","password":"secret123"}'
+POST {{base_url}}/users/register
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "email": "alice@example.com",
+  "password": "secret123"
+}
+
+### Login and get JWT token
+# curl -X POST http://localhost:8000/users/login \
+#   -F "username=alice" -F "password=secret123"
+POST {{base_url}}/users/login
+Content-Type: application/x-www-form-urlencoded
+
+username=alice&password=secret123
+
+### Get current user profile
+GET {{base_url}}/users/me
+Authorization: Bearer {{token}}
+
+### Create a task
+POST {{base_url}}/tasks/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Build my portfolio project",
+  "description": "Push TaskAPI to GitHub",
+  "priority": "high"
+}
+
+### List all tasks
+GET {{base_url}}/tasks/
+Authorization: Bearer {{token}}
+
+### List only high priority tasks
+GET {{base_url}}/tasks/?priority=high
+Authorization: Bearer {{token}}
+
+### List only incomplete tasks
+GET {{base_url}}/tasks/?completed=false
+Authorization: Bearer {{token}}
+
+### Update a task (replace 1 with your task id)
+PATCH {{base_url}}/tasks/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "completed": true
+}
+
+### Delete a task
+DELETE {{base_url}}/tasks/1
+Authorization: Bearer {{token}}
